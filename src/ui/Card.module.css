@@ -1,0 +1,6 @@
+.card {
+    display: flex;
+    box-shadow: 200px solid gray;
+    border: 1px solid darkred;
+    border-radius: 5px;
+}
