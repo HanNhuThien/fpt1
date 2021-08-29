@@ -1,21 +1,34 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Card from "../../../ui/Card";
 import Button from "../../../ui/Button";
 import cz from "./FoodItem.module.css";
+import CartContext from "../../../store/CartContext";
 
 const FoodItem = (props) => {
-  const { foodName, foodPrice, foodNoItem: propNoItem } = props.food;
-  const updateNumberOfItemHandler = (e) => {
-    setNumberOfItem(e.target.value);
-  };
+  const cartCtx = useContext(CartContext);
+
+  const { id, foodName, foodPrice, foodNoItem: propNoItem } = props.food;
+
   const [numberOfItem, setNumberOfItem] = useState(propNoItem);
+
+  const updateNumberOfItemHandler = (e) => {
+    setNumberOfItem(parseInt(e.target.value));
+  };
+
   //   const isShowAmount = numberOfItem > 0;
   //   useEffect(()=>{
 
   //   }, [numberOfItem])
   const calulateAmount = Number.parseFloat(numberOfItem * foodPrice).toFixed(2);
   //  Number.parseFloat(numberOfItem) * Number.parseFloat(foodPrice).toFixed(2);
-  const onClickBtnAdd = () => {console.log("c")};
+  const onClickBtnAdd = () => {
+    //console.table(cartCtx);
+    setNumberOfItem(0);
+    cartCtx.addItemFn({ ...props.food, foodNoItem: numberOfItem });
+  };
+
+  const MAX_BUY_AMOUNT_PER_ITEM = 5;
+
   return (
     <Card className={cz.foodItem}>
       {/*------------------- 1 ------------------- */}
@@ -32,11 +45,11 @@ const FoodItem = (props) => {
         <input
           type="number"
           min="0"
-          max="5"
+          max={MAX_BUY_AMOUNT_PER_ITEM}
           step="1"
-          defaultValue={numberOfItem}
           onChange={updateNumberOfItemHandler}
-        />{" "}
+          value={numberOfItem}
+        />
         item
         <span className={numberOfItem && numberOfItem > 1 ? "" : cz.hidePlural}>
           s
@@ -45,7 +58,13 @@ const FoodItem = (props) => {
       {/* 4 */}
       <span> Amount: {calulateAmount}</span>
       {/* 5 */}
-      <Button className={cz.btnAdd} onClick={onClickBtnAdd}>
+      <Button
+        className={cz.btnAdd}
+        onClick={onClickBtnAdd}
+        disabled={
+          !(numberOfItem > 0 && numberOfItem < MAX_BUY_AMOUNT_PER_ITEM + 1)
+        }
+      >
         Add to card
       </Button>
     </Card>
