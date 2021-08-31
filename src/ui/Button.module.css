@@ -1,0 +1,16 @@
+.button {
+  background-color: darksalmon;
+  border: 1px solid rgb(43, 2, 39);
+  width: 100px;
+  height: 40px;
+  font-weight: bold;
+  /* text-justify: auto; */
+  padding: 2px 5px;
+
+  /* height - sum_border */
+  /* line-height: 38px; */
+}
+
+.button:hover{
+    background-color: salmon;
+}
